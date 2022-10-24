@@ -1,18 +1,12 @@
 package racing;
 
+import java.util.Objects;
+
 public abstract class Transport {
 
     protected final String brand;
     protected final String model;
     protected final double engineVolume;
-
-
-    public Transport(String brand, String model, double engineVolume) {
-        this.brand = ValidationUtils.validOrDefault(brand, "default");
-        this.model = ValidationUtils.validOrDefault(model, "default");
-       this.engineVolume = engineVolume>0.5 ? engineVolume : 1.5;
-    }
-
 
     public String getBrand() {
         return brand;
@@ -26,6 +20,15 @@ public abstract class Transport {
         return engineVolume;
     }
 
+    public Transport(String brand, String model, double engineVolume) {
+        this.brand = ValidationUtils.validOrDefault(brand, "default");
+        this.model = ValidationUtils.validOrDefault(model, "default");
+       this.engineVolume = engineVolume>0.5 ? engineVolume : 1.5;
+    }
+
+    public abstract void start();
+
+    public  abstract void finish();
 
     @Override
     public String toString() {
@@ -36,8 +39,16 @@ public abstract class Transport {
                 '}';
     }
 
-    public abstract void start();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transport transport = (Transport) o;
+        return Double.compare(transport.engineVolume, engineVolume) == 0 && Objects.equals(brand, transport.brand) && Objects.equals(model, transport.model);
+    }
 
-    public  abstract void finish();
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(brand, model, engineVolume);
+    }
 }
